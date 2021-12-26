@@ -149,7 +149,11 @@ def get_crops(img, segments):
             continue
         # s = np.where(
         # np.repeat(segments[:, :, np.newaxis], 3, axis=2) == 20, img, 0)
-        contours = cv.findContours((segments == i).astype(np.uint8), 1, 1)
+        contours = cv.findContours(
+            (segments == i).astype(np.uint8),
+            mode=cv.RETR_EXTERNAL,
+            method=cv.CHAIN_APPROX_SIMPLE,
+        )
         # opencv flips x and y
         y, x, w, h = cv.boundingRect(contours[0][0])
         imgc = img.copy()
@@ -188,7 +192,7 @@ for croplist in clustered_crops:
         total_crops += 1
 print(f"{total_crops=}")
 
-out = np.full((1100, 1600, 3), bg_out, dtype=np.uint8)
+out = np.full((1200, 1500, 3), bg_out, dtype=np.uint8)
 
 stack_centers = np.linspace(
     0,
